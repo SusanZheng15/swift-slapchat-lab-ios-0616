@@ -7,17 +7,40 @@
 //
 
 import UIKit
+import CoreData
 
-class TableViewController: UITableViewController {
+class TableViewController: UITableViewController
+{
+    
+    let store = DataStore.sharedDataStore
 
-    override func viewDidLoad() {
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    
+        store.fetchData()
         
     }
+    
+    override func viewWillAppear(animated: Bool)
+    {
+        store.fetchData()
+        tableView.reloadData()
+    }
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        return store.messages.count
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        let cell = tableView.dequeueReusableCellWithIdentifier("basicCell", forIndexPath: indexPath)
+        
+        cell.textLabel?.text = store.messages[indexPath.row].content
+        
+        return cell
+    }
+    
+
 }
